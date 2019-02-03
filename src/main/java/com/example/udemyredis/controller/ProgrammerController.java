@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.springframework.web.client.HttpClientErrorException.NotFound;
 
@@ -56,5 +57,21 @@ public class ProgrammerController {
 	@GetMapping("/programmer-list/count")
 	public Long getProgrammerListSize() {
 		return programmerService.getProgrammersListSize();
+	}
+
+	@PostMapping("/programmer-set")
+	public Programmer[] addProgrammerToSet(@RequestBody Programmer ... programmers) {
+		programmerService.addProgrammerToSet(programmers);
+		return programmers;
+	}
+
+	@GetMapping("/programmer-set")
+	public Set<Programmer> getProgrammerSet() {
+		return programmerService.getAllProgrammersFromSet();
+	}
+
+	@GetMapping("/programmer-set/is-member")
+	public boolean isSetMember(@RequestBody Programmer programmer) {
+		return programmerService.isSetMember(programmer);
 	}
 }

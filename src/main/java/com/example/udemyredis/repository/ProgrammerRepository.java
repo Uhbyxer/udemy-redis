@@ -3,6 +3,7 @@ package com.example.udemyredis.repository;
 import com.example.udemyredis.domain.Programmer;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProgrammerRepository {
 	// Strings
@@ -16,4 +17,11 @@ public interface ProgrammerRepository {
 	List<Programmer> getAllProgrammersFromList();
 
 	Long getProgrammersListSize();
+
+	// Set
+	void addProgrammerToSet(Programmer... programmers);
+
+	Set<Programmer> getAllProgrammersFromSet();
+
+	boolean isSetMember(Programmer programmer);
 }

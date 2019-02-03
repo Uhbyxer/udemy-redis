@@ -6,6 +6,7 @@ import com.example.udemyredis.service.ProgrammerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
  public class ProgrammerServiceImpl implements ProgrammerService {
@@ -39,5 +40,20 @@ import java.util.List;
 	@Override
 	public Long getProgrammersListSize() {
 		return repository.getProgrammersListSize();
+	}
+
+	@Override
+	public void addProgrammerToSet(Programmer... programmers) {
+		repository.addProgrammerToSet(programmers);
+	}
+
+	@Override
+	public Set<Programmer> getAllProgrammersFromSet() {
+		return repository.getAllProgrammersFromSet();
+	}
+
+	@Override
+	public boolean isSetMember(Programmer programmer) {
+		return repository.isSetMember(programmer);
 	}
 }
