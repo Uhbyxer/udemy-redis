@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static org.springframework.web.client.HttpClientErrorException.NotFound;
-
 @RestController
 public class ProgrammerController {
 
@@ -32,7 +30,7 @@ public class ProgrammerController {
 	}
 
 	@GetMapping("/programmer-string/{id}")
-	public Programmer getProgrammer(@PathVariable String id) throws IOException, NotFound {
+	public Programmer getProgrammer(@PathVariable String id) throws IOException {
 		String programmerAsString = programmerService.getProgrammerAsString(id);
 		if (programmerAsString == null) {
 			throw new NoSuchElementException("Not found by id: " + id);
