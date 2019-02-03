@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.springframework.web.client.HttpClientErrorException.NotFound;
 
 @RestController
-@RequestMapping("/programmer-string")
 public class ProgrammerController {
 
 	private final ProgrammerService programmerService;
@@ -21,7 +21,7 @@ public class ProgrammerController {
 		this.programmerService = programmerService;
 	}
 
-	@PostMapping
+	@PostMapping("/programmer-string")
 	public Programmer createProgrammer(@RequestBody Programmer programmer) throws JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		programmerService.setProgrammerAsString(String.valueOf(programmer.getId()), objectMapper.writeValueAsString(programmer));
@@ -29,7 +29,7 @@ public class ProgrammerController {
 		return programmer;
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/programmer-string/{id}")
 	public Programmer getProgrammer(@PathVariable String id) throws IOException, NotFound {
 		String programmerAsString = programmerService.getProgrammerAsString(id);
 		if (programmerAsString == null) {
@@ -39,5 +39,22 @@ public class ProgrammerController {
 		ObjectMapper objectMapper = new ObjectMapper();
 		Programmer programmer = objectMapper.readValue(programmerAsString, Programmer.class);
 		return programmer;
+	}
+
+	@PostMapping("/programmer-list")
+	public Programmer addProgrammerToList(@RequestBody Programmer programmer) {
+		programmerService.addProgrammerToList(programmer);
+		return programmer;
+	}
+
+	@GetMapping("/programmer-list")
+	public List<Programmer> getProgrammerList() {
+		return programmerService.getAllProgrammersFromList();
+	}
+
+
+	@GetMapping("/programmer-list/count")
+	public Long getProgrammerListSize() {
+		return programmerService.getProgrammersListSize();
 	}
 }
