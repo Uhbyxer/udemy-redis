@@ -12,6 +12,7 @@ import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
@@ -60,6 +61,12 @@ public class RedisConfig {
 	@Qualifier("setOperations")
 	public SetOperations<String, Programmer> setOperations(RedisTemplate<String, Programmer> redisTemplate){
 		return redisTemplate.opsForSet();
+	}
+
+	@Bean
+	@Qualifier("hashOperations")
+	public HashOperations<String, Integer, Programmer> hashOperations(RedisTemplate<String, Programmer> redisTemplate){
+		return redisTemplate.opsForHash();
 	}
 
 	@Bean

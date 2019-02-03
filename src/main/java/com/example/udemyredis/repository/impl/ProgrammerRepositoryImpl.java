@@ -2,12 +2,14 @@ package com.example.udemyredis.repository.impl;
 
 import com.example.udemyredis.domain.Programmer;
 import com.example.udemyredis.repository.ProgrammerRepository;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -16,16 +18,20 @@ public class ProgrammerRepositoryImpl implements ProgrammerRepository {
 
 	private static final String LIST_KEY = "ProgrammersListKey";
 	private static final String SET_KEY = "ProgrammersSetKey";
+	private static final String HASH_KEY = "ProgrammersHashKey";
 
 	private final RedisTemplate<String, Object> redisTemplate;
 	private final ListOperations<String, Programmer> listOperations;
 	private final SetOperations<String, Programmer> setOperations;
+	private final HashOperations<String, Integer, Programmer> hashOperations;
 
 	public ProgrammerRepositoryImpl(RedisTemplate<String, Object> redisTemplate,
-			ListOperations<String, Programmer> listOperations, SetOperations<String, Programmer> setOperations) {
+			ListOperations<String, Programmer> listOperations, SetOperations<String, Programmer> setOperations,
+			HashOperations<String, Integer, Programmer> hashOperations) {
 		this.redisTemplate = redisTemplate;
 		this.listOperations = listOperations;
 		this.setOperations = setOperations;
+		this.hashOperations = hashOperations;
 	}
 
 	@Override
@@ -67,6 +73,31 @@ public class ProgrammerRepositoryImpl implements ProgrammerRepository {
 
 	@Override
 	public boolean isSetMember(Programmer programmer) {
-		return  setOperations.isMember(SET_KEY, programmer);
+		return setOperations.isMember(SET_KEY, programmer);
+	}
+
+	@Override
+	public void saveHash(Programmer programmer) {
+		hashOperations.putIfAbsent(HASH_KEY, Integer.valueOf(programmer.getId()), programmer);
+	}
+
+	@Override
+	public void updateHash(Programmer programmer) {
+		hashOperations.put(HASH_KEY, Integer.valueOf(programmer.getId()), programmer);
+	}
+
+	@Override
+	public Map<Integer, Programmer> findAllHash() {
+		return hashOperations.entries(HASH_KEY);
+	}
+
+	@Override
+	public Programmer findInHash(int id) {
+		return hashOperations.get(HASH_KEY, id);
+	}
+
+	@Override
+	public void deleteHash(int id) {
+		hashOperations.delete(HASH_KEY, id);
 	}
 }

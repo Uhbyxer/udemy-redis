@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -74,4 +75,33 @@ public class ProgrammerController {
 	public boolean isSetMember(@RequestBody Programmer programmer) {
 		return programmerService.isSetMember(programmer);
 	}
+
+	@PostMapping("/programmer-hash")
+	public Programmer addProgrammerToHash(@RequestBody Programmer programmer) {
+		programmerService.saveHash(programmer);
+		return programmer;
+	}
+
+	@PutMapping("/programmer-hash")
+	public Programmer updateProgrammerToHash(@RequestBody Programmer programmer) {
+		programmerService.updateHash(programmer);
+		return programmer;
+	}
+
+	@GetMapping("/programmer-hash")
+	public Map<Integer, Programmer> getAllProgrammersFromHash() {
+		Map<Integer, Programmer> allHash = programmerService.findAllHash();
+		return allHash;
+	}
+
+	@GetMapping("/programmer-hash/{id}")
+	public Programmer getProgrammerFromHash(@PathVariable int id) {
+		return programmerService.findInHash(id);
+	}
+
+	@DeleteMapping("/programmer-hash/{id}")
+	public void deleteProgrammerFromHash(@PathVariable int id) {
+		programmerService.deleteHash(id);
+	}
+
 }
